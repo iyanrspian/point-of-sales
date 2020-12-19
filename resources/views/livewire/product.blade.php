@@ -1,6 +1,4 @@
 <div>
-    {{-- The best athlete wants his opponent at his best. --}}
-    {{-- <h1>Test</h1> --}}
     <div class="row">
         <div class="col-md-8">
             <div class="card">
