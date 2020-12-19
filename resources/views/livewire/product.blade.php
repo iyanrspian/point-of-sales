@@ -4,8 +4,10 @@
     <div class="row">
         <div class="col-md-8">
             <div class="card">
+                <div class="card-header">
+                    <h3 class="font-weight-bold mt-2">Product List</h3>
+                </div>
                 <div class="card-body">
-                    <h2 class="font-weight-bold mb-3">Product List</h2>
                     <table class="table table-bordered table-hovered table-striped">
                         <thead>
                             <tr>
@@ -35,8 +37,10 @@
         </div>
         <div class="col-md-4">
             <div class="card">
+                <div class="card-header">
+                    <h3 class="font-weight-bold mt-2">Create Product</h3>
+                </div>
                 <div class="card-body">
-                    <h2 class="font-weight-bold mb-3">Create Product</h2>
                     <form wire:submit.prevent="store">
                         <div class="form-group">
                             <label>Product Name</label>
