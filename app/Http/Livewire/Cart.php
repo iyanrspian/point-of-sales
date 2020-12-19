@@ -4,15 +4,27 @@ namespace App\Http\Livewire;
 
 use Carbon\Carbon;
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\Product as ProductModel;
 
 class Cart extends Component
 {
+    use WithPagination;
+
+    protected $paginationTheme = 'bootstrap';
+    
     public $tax = "0%";
+
+    public $search;
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
 
     public function render()
     {
-        $product = ProductModel::orderBy('created_at', 'DESC')->get();
+        $product = ProductModel::where('name', 'like', '%'.$this->search.'%')->orderBy('created_at', 'DESC')->paginate(4);
 
         $condition = new \Darryldecode\Cart\CartCondition([
             'name' => 'taxes',

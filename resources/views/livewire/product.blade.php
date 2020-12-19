@@ -78,7 +78,7 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label>Product Name</label>
+                            <label>Price</label>
                             <input wire:model="price" type="number" class="form-control">
                             @error('price')
                                 <small class="text-danger">{{ $message }}</small>
