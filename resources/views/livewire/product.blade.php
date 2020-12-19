@@ -4,42 +4,41 @@
     <div class="row">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">
-                    <h3 class="font-weight-bold mt-2">Product List</h3>
-                </div>
+                <h4 class="card-header font-weight-bold">Product List</h4>
                 <div class="card-body">
-                    <table class="table table-bordered table-hover table-striped">
-                        <thead>
+                    <table class="table table-striped">
+                        <thead class="bg-primary text-white">
                             <tr>
-                                <th>No</th>
+                                <th width="35">No</th>
                                 <th>Name</th>
-                                <th width="20%">Image</th>
+                                <th width="13%">Image</th>
                                 <th>Description</th>
-                                <th>Qty</th>
-                                <th>Price</th>
+                                <th width="40">Qty</th>
+                                <th width="130">Price</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($product as $index=>$products)
                             <tr>
-                                <td>{{ $index+1 }}</td>
+                                <td class="text-center">{{ $index+1 }}</td>
                                 <td>{{ $products->name }}</td>
                                 <td><img src="{{ asset('storage/images/'.$products->image) }}" alt="Image Preview" class="img-fluid"></td>
                                 <td>{{ $products->desc }}</td>
-                                <td>{{ $products->qty }}</td>
-                                <td>{{ $products->price }}</td>
+                                <td class="text-center">{{ $products->qty }}</td>
+                                <td>Rp. {{ number_format($products->price) }}</td>
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
+                    <div style="display:flex;justify-content:center">
+                        {{ $product->links() }}
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card">
-                <div class="card-header">
-                    <h3 class="font-weight-bold mt-2">Create Product</h3>
-                </div>
+                <h4 class="card-header font-weight-bold">Create Product</h4>
                 <div class="card-body">
                     <form wire:submit.prevent="store">
                         <div class="form-group">
@@ -77,7 +76,7 @@
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
-                        <div class="form-group">
+                        <div class="form-group mb-4">
                             <label>Price</label>
                             <input wire:model="price" type="number" class="form-control">
                             @error('price')

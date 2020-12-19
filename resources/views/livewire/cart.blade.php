@@ -16,7 +16,7 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        @foreach ($product as $products)
+                        @forelse ($product as $products)
                             <div class="col-md-3 mb-3">
                                 <div class="card">
                                     <div class="card-body">
@@ -24,13 +24,17 @@
                                     </div>
                                     <div class="card-footer">
                                         <h6 class="font-weight-bold">{{ $products->name }}</h6>
-                                        <h6>{{ $products->desc }}</h6>
-                                        <h6>Rp. {{ $products->price }}</h6>
-                                        <button wire:click="addItem({{ $products->id }})" class="btn btn-primary btn-sm btn-block">Add to Cart</button>
+                                        {{-- <h6>{{ $products->desc }}</h6> --}}
+                                        <h6>Rp. {{ number_format($products->price) }}</h6>
+                                        <button wire:click="addItem({{ $products->id }})" class="btn btn-sm btn-primary btn-sm btn-block">Add to Cart</button>
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        @empty
+                            <div class="col-md-12">
+                                <h4 class="text-center">Product not found!</h4>
+                            </div>
+                        @endforelse
                     </div>
                     <div style="display:flex;justify-content:flex-end">
                         {{ $product->links() }}
@@ -54,7 +58,7 @@
                                 <th>Name</th>
                                 <th class="text-center" width="60">Qty</th>
                                 {{-- <th class="text-center" width="80">Price</th> --}}
-                                <th class="text-center" width="80">Total</th>
+                                <th class="text-center" width="80">Total (Rp.)</th>
                                 <th class="text-center" width="35">Ket.</th>
                             </tr>
                         </thead>
@@ -69,7 +73,7 @@
                                         <a href="#" wire:click="increaseItem('{{ $carts['rowId'] }}')" class="text-secondary"><i class="fas fa-plus-square fa-sm"></i></a>
                                     </td>
                                     {{-- <td class="text-right">{{ $carts['price'] }}</td> --}}
-                                    <td class="text-right">{{ $carts['prices'] }}</td>
+                                    <td class="text-right">{{ number_format($carts['prices']) }}</td>
                                     <td class="text-center">
                                         <a href="#" wire:click="removeItem('{{ $carts['rowId'] }}')" class="text-secondary"><i class="fas fa-trash fa-sm"></i></a>
                                     </td>
@@ -84,9 +88,23 @@
             <div class="card mt-3">
                 <div class="card-body">
                     <h5 class="font-weight-bold mb-3">Cart Summary</h5>
-                    <h6>Subtotal : {{ $summary['subtotal'] }}</h6>
-                    <h6>Pajak : {{ $summary['taxes'] }}</h6>
-                    <h6>Total : {{ $summary['total'] }}</h6>
+                    <table class="table table-sm table-borderless">
+                        <tr>
+                            <td>Subtotal</td>
+                            <td width="30">Rp.</td>
+                            <td class="text-right" width="90">{{ number_format($summary['subtotal']) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Tax (10%)</td>
+                            <td width="30">Rp.</td>
+                            <td class="text-right" width="90">{{ number_format($summary['taxes']) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Total</td>
+                            <td width="30">Rp.</td>
+                            <td class="text-right" width="90">{{ number_format($summary['total']) }}</td>
+                        </tr>
+                    </table>
                     <div class="row mt-3">
                         <div class="col-md-4">
                             <button wire:click="enableTax" class="btn btn-sm btn-primary btn-block">Add Tax</button>
