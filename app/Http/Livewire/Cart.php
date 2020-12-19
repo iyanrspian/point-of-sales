@@ -32,7 +32,7 @@ class Cart extends Component
         } else {
             foreach ($items as $item) {
                 $cart[] = [
-                    'row_id' => $item->id,
+                    'rowId' => $item->id,
                     'name' => $item->name,
                     'qty' => $item->quantity,
                     'price' => $item->price,
@@ -97,5 +97,25 @@ class Cart extends Component
     public function disableTax()
     {
         $this->tax = "0%";
+    }
+
+    public function increaseItem($rowId)
+    {
+        \Cart::session(Auth()->id())->update($rowId, [
+            'quantity' => [
+                'relative' => true,
+                'value' => 1
+            ]
+        ]);
+    }
+
+    public function decreaseItem($rowId)
+    {
+        \Cart::session(Auth()->id())->update($rowId, [
+            'quantity' => [
+                'relative' => true,
+                'value' => -1
+            ]
+        ]);
     }
 }

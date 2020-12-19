@@ -33,13 +33,13 @@
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered table-sm table-hovered table-striped">
-                        <thead>
+                        <thead class="bg-secondary text-white">
                             <tr>
-                                <th>No</th>
+                                <th width="35">No</th>
                                 <th>Name</th>
-                                <th>Qty</th>
-                                <th>Price</th>
-                                <th>Total</th>
+                                <th class="text-center" width="55">Qty</th>
+                                <th class="text-center" width="80">Price</th>
+                                <th class="text-center" width="80">Total</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -47,9 +47,13 @@
                                 <tr>
                                     <td class="text-center">{{ $index+1 }}</td>
                                     <td>{{ $carts['name'] }}</td>
-                                    <td class="text-center">{{ $carts['qty'] }}</td>
-                                    <td>{{ $carts['price'] }}</td>
-                                    <td>{{ $carts['prices'] }}</td>
+                                    <td class="text-center">
+                                        <a href="#" wire:click="decreaseItem('{{ $carts['rowId'] }}')" class="text-secondary"><i class="fas fa-minus-square fa-sm"></i></a>
+                                        {{ $carts['qty'] }}
+                                        <a href="#" wire:click="increaseItem('{{ $carts['rowId'] }}')" class="text-secondary"><i class="fas fa-plus-square fa-sm"></i></a>
+                                    </td>
+                                    <td class="text-right">{{ $carts['price'] }}</td>
+                                    <td class="text-right">{{ $carts['prices'] }}</td>
                                 </tr>
                             @empty
                                 <td colspan="5"><h6 class="text-center mt-2">Empty Cart</h6></td>
