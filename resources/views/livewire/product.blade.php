@@ -8,7 +8,7 @@
                     <h3 class="font-weight-bold mt-2">Product List</h3>
                 </div>
                 <div class="card-body">
-                    <table class="table table-bordered table-hovered table-striped">
+                    <table class="table table-bordered table-hover table-striped">
                         <thead>
                             <tr>
                                 <th>No</th>

@@ -15,7 +15,7 @@ class Cart extends Component
         $product = ProductModel::orderBy('created_at', 'DESC')->get();
 
         $condition = new \Darryldecode\Cart\CartCondition([
-            'name' => 'pajak',
+            'name' => 'taxes',
             'type' => 'tax',
             'target' => 'total',
             'value' => $this->tax,
@@ -46,12 +46,12 @@ class Cart extends Component
         $subtotal = \Cart::session(Auth()->id())->getSubTotal();
         $total = \Cart::session(Auth()->id())->getTotal();
 
-        $newCondition = \Cart::session(Auth()->id())->getCondition('pajak');
-        $pajak = $newCondition->getCalculatedValue($subtotal);
+        $newCondition = \Cart::session(Auth()->id())->getCondition('taxes');
+        $taxes = $newCondition->getCalculatedValue($subtotal);
 
         $summary = [
             'subtotal' => $subtotal,
-            'pajak' => $pajak,
+            'taxes' => $taxes,
             'total' => $total
         ];
 
@@ -66,15 +66,24 @@ class Cart extends Component
     {
         $rowId = "Cart".$id;
         $cart = \Cart::session(Auth()->id())->getContent();
-        $cekItemId = $cart->whereIn('id', $rowId);
+        $checkItemId = $cart->whereIn('id', $rowId);
 
-        if ($cekItemId->isNotEmpty()) {
-            \Cart::session(Auth()->id())->update($rowId, [
-                'quantity' => [
-                    'relative' => true,
-                    'value' => 1
-                ]
-            ]);
+        if ($checkItemId->isNotEmpty()) {
+            $idProduct = substr($rowId, 4);
+            $product = ProductModel::find($idProduct);
+    
+            $xcart = \Cart::session(Auth()->id())->getContent();
+            $checkItem = $xcart->whereIn('id', $rowId);
+            if ($product->qty == $checkItem[$rowId]->quantity) {
+                session()->flash('error', 'Out of stock!');
+            } else {
+                \Cart::session(Auth()->id())->update($rowId, [
+                    'quantity' => [
+                        'relative' => true,
+                        'value' => 1
+                    ]
+                ]);
+            }
         } else {
             $product = ProductModel::findOrFail($id);
             \Cart::session(Auth()->id())->add([
@@ -101,21 +110,46 @@ class Cart extends Component
 
     public function increaseItem($rowId)
     {
-        \Cart::session(Auth()->id())->update($rowId, [
-            'quantity' => [
-                'relative' => true,
-                'value' => 1
-            ]
-        ]);
+        $idProduct = substr($rowId, 4);
+        $product = ProductModel::find($idProduct);
+
+        $cart = \Cart::session(Auth()->id())->getContent();
+        $checkItem = $cart->whereIn('id', $rowId);
+
+        if ($product->qty == $checkItem[$rowId]->quantity) {
+            session()->flash('error', 'Out of stock!');
+        } else {
+            \Cart::session(Auth()->id())->update($rowId, [
+                'quantity' => [
+                    'relative' => true,
+                    'value' => 1
+                ]
+            ]);
+        }
     }
 
     public function decreaseItem($rowId)
     {
-        \Cart::session(Auth()->id())->update($rowId, [
-            'quantity' => [
-                'relative' => true,
-                'value' => -1
-            ]
-        ]);
+        $idProduct = substr($rowId, 4);
+        $product = ProductModel::find($idProduct);
+
+        $cart = \Cart::session(Auth()->id())->getContent();
+        $checkItem = $cart->whereIn('id', $rowId);
+        
+        if ($checkItem[$rowId]->quantity == 1) {
+            $this->removeItem($rowId);
+        } else {
+            \Cart::session(Auth()->id())->update($rowId, [
+                'quantity' => [
+                    'relative' => true,
+                    'value' => -1
+                ]
+            ]);
+        }
+    }
+
+    public function removeItem($rowId)
+    {
+        \Cart::session(Auth()->id())->remove($rowId);
     }
 }

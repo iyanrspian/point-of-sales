@@ -32,14 +32,20 @@
                     <h3 class="font-weight-bold mt-2">Cart</h3>
                 </div>
                 <div class="card-body">
-                    <table class="table table-bordered table-sm table-hovered table-striped">
+                    <p class="text-danger font-weight-bold">
+                        @if (session()->has('error'))
+                            {{ session('error') }}
+                        @endif
+                    </p>
+                    <table class="table table-sm table-striped">
                         <thead class="bg-secondary text-white">
                             <tr>
                                 <th width="35">No</th>
                                 <th>Name</th>
-                                <th class="text-center" width="55">Qty</th>
+                                <th class="text-center" width="60">Qty</th>
                                 <th class="text-center" width="80">Price</th>
                                 <th class="text-center" width="80">Total</th>
+                                <th class="text-center" width="35">Ket.</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -54,6 +60,9 @@
                                     </td>
                                     <td class="text-right">{{ $carts['price'] }}</td>
                                     <td class="text-right">{{ $carts['prices'] }}</td>
+                                    <td class="text-center">
+                                        <a href="#" wire:click="removeItem('{{ $carts['rowId'] }}')" class="text-secondary"><i class="fas fa-trash fa-sm"></i></a>
+                                    </td>
                                 </tr>
                             @empty
                                 <td colspan="5"><h6 class="text-center mt-2">Empty Cart</h6></td>
@@ -68,7 +77,7 @@
                 </div>
                 <div class="card-body">
                     <h5>Subtotal : {{ $summary['subtotal'] }}</h5>
-                    <h5>Pajak : {{ $summary['pajak'] }}</h5>
+                    <h5>Pajak : {{ $summary['taxes'] }}</h5>
                     <h5>Total : {{ $summary['total'] }}</h5>
                     <div class="row mt-3">
                         <div class="col-md-6">
