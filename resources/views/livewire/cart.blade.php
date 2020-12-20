@@ -49,7 +49,7 @@
                             {{ session('error') }}
                         @endif
                     </p>
-                    <table class="table table-responsive-sm table-sm table-borderless table-striped">
+                    <table class="table table-responsive-sm table-sm">
                         <thead class="bg-primary text-white">
                             <tr>
                                 <th>#</th>
@@ -111,11 +111,62 @@
                             <button wire:click="enableTax" class="btn btn-sm btn-primary btn-block">Add Tax</button>
                         </div>
                     </div>
-                    <div class="mt-3 mb-1">
-                        <button class="btn btn-sm active btn-success btn-block"><i class="fas fa-save"></i>&nbsp;&nbsp;&nbsp;Save Transaction</button>
+                    <h5 class="font-weight-bold my-3">Cart Payment</h5>
+                    <div class="form-group mt-3">
+                        <input type="number" id="payment" class="form-control form-control-sm" placeholder="Input customer payment">
+                        <input type="hidden" id="total" value="{{ $summary['total'] }}">
                     </div>
+                    <form wire:submit.prevent="handleSubmit">
+                        <div>
+                            <label style="font-size: 10pt">Payment</label>
+                            <h4 id="paymentText">Rp. 0</h4>
+                        </div>
+                        <div>
+                            <label style="font-size: 10pt">Bill Amount</label>
+                            <h4 id="billText">Rp. 0</h4>
+                        </div>
+                        <div class="mt-3 mb-1">
+                            <button wire:ignore type="submit" id="saveButton" class="btn btn-sm active btn-success btn-block" disabled><i class="fas fa-save"></i>&nbsp;&nbsp;&nbsp;Save Transaction</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@push('script-custom')
+    <script>
+        payment.oninput = () => {
+            const paymentAmount = document.getElementById('payment').value
+            const totalAmount = document.getElementById('total').value
+
+            const billAmount = paymentAmount - totalAmount
+            document.getElementById('paymentText').innerHTML = `Rp. ${rupiah(paymentAmount)}`
+            document.getElementById('billText').innerHTML = `Rp. ${rupiah(billAmount)}`
+
+            const saveButton = document.getElementById('saveButton')
+            if (billAmount < 0) {
+                saveButton.disabled = true
+            } else {
+                saveButton.disabled = false
+            }
+        }
+
+        const rupiah = (angka) => {
+            const numbString = angka.toString()
+            const split = numbString.split(',')
+            const sisa = split[0].length % 3
+            
+            let rupiah = split[0].substr(0, sisa)
+            const ribuan = split[0].substr(sisa).match(/\d{3}/gi)
+
+			if(ribuan){
+				const separator = sisa ? '.' : ''
+				rupiah += separator + ribuan.join('.')
+			}
+
+            return split[1] != undefined ? rupiah + ',' + split[1] : rupiah
+        }
+    </script>
+@endpush
