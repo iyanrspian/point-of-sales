@@ -2,6 +2,9 @@
 
 use App\Http\Livewire\Cart;
 use App\Http\Livewire\Product;
+use App\Http\Livewire\Auth\Login;
+use App\Http\Livewire\Auth\Logout;
+use App\Http\Livewire\Auth\Register;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,15 +18,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group(['middleware' => ['guest']], function () {
+    Route::get('/', function () {
+        return view('welcome');
+    });
+    Route::get('/login', Login::class)->name('login');
+    Route::get('/register', Register::class)->name('register');
 });
 
-Auth::routes();
-
+// Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/product', Product::class);
     Route::get('/cart', Cart::class);
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/logout', Logout::class)->name('logout');
 });
