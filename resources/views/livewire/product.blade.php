@@ -1,8 +1,8 @@
 <div>
     <div class="row">
         <div class="col-md-8">
-            <div class="card">
-                <h4 class="card-header font-weight-bold">Product List</h4>
+            <div class="card shadow-1-strong">
+                <h5 class="card-header font-weight-bold my-1">Product List</h5>
                 <div class="card-body">
                     <table class="table table-striped">
                         <thead class="bg-primary text-white">
@@ -35,8 +35,8 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card">
-                <h4 class="card-header font-weight-bold">Create Product</h4>
+            <div class="card shadow-1-strong">
+                <h5 class="card-header font-weight-bold my-1">Create Product</h5>
                 <div class="card-body">
                     <form wire:submit.prevent="store">
                         <div class="form-group">
