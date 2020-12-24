@@ -30,7 +30,7 @@
                             </div>
                         @empty
                             <div class="col-md-12">
-                                <h4 class="text-center">Product not found!</h4>
+                                <h4 class="text-center mb-3">Product not found!</h4>
                             </div>
                         @endforelse
                     </div>
@@ -113,17 +113,17 @@
                     </div>
                     <h5 class="font-weight-bold my-3">Cart Payment</h5>
                     <div class="form-group mt-3">
-                        <input type="number" id="payment" class="form-control form-control-sm" placeholder="Input customer payment">
+                        <input wire:model="payment" type="number" id="payment" class="form-control form-control-sm" placeholder="Input customer payment">
                         <input type="hidden" id="total" value="{{ $summary['total'] }}">
                     </div>
                     <form wire:submit.prevent="handleSubmit">
                         <div>
                             <label style="font-size: 10pt">Payment</label>
-                            <h4 id="paymentText">Rp. 0</h4>
+                            <h4 id="paymentText" wire:ignore>Rp. 0</h4>
                         </div>
                         <div>
                             <label style="font-size: 10pt">Bill Amount</label>
-                            <h4 id="billText">Rp. 0</h4>
+                            <h4 id="billText" wire:ignore>Rp. 0</h4>
                         </div>
                         <div class="mt-3 mb-1">
                             <button wire:ignore type="submit" id="saveButton" class="btn btn-sm active btn-success btn-block" disabled><i class="fas fa-save"></i>&nbsp;&nbsp;&nbsp;Save Transaction</button>

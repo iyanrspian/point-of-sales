@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Product as ProductModel;
+use DB;
 
 class Cart extends Component
 {
@@ -19,11 +20,6 @@ class Cart extends Component
     public function updatingSearch()
     {
         $this->resetPage();
-    }
-
-    public function handleSubmit()
-    {
-        dd($this->payment);
     }
 
     public function render()
@@ -167,5 +163,43 @@ class Cart extends Component
     public function removeItem($rowId)
     {
         \Cart::session(Auth()->id())->remove($rowId);
+    }
+
+    public function handleSubmit()
+    {
+        // dd($this->payment);
+
+        $cartTotal = \Cart::session(Auth()->id())->getTotal();
+        $bayar = $this->payment;
+        $billAmount = (int) $bayar - (int) $cartTotal;
+        
+        if ($billAmount >= 0) {
+            DB::beginTransaction();
+            try {
+                $allCart = \Cart::session(Auth()->id())->getContent();
+
+                $filterCart = $allCart->map(function ($item) {
+                    return [
+                        'id' => substr($item->id, 4),
+                        'quantity' => $item->quantity
+                    ];
+                });
+
+                foreach ($filterCart as $cart) {
+                    $product = ProductModel::find($cart['id']);
+
+                    if ($product->qty === 0) {
+                        return session()->flash('error', 'Out of stock!');
+                    }
+
+                    $product->decrement('qty', $cart['quantity']);
+                }
+
+                DB::commit();
+            } catch (\Throwable $th) {
+                DB::rollback();
+                return session()->flash('error', $th);
+            }
+        }
     }
 }
